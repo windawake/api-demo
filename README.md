@@ -1,2 +1,7 @@
-# api-demo
-采用gin和gorm库，快速地开发公司的业务
+## api-demo
+#### 采用gin和gorm库，快速地开发公司的业务
+
+#### 运行项目
+```
+go run main.go
+```
