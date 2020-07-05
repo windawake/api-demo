@@ -8,5 +8,8 @@ go run main.go
 
 #### 演示效果
 
-![avatar](https://github.com/windawake/api-demo/blob/master/01.png){:height="50%" width="50%"}
-![avatar](https://github.com/windawake/api-demo/blob/master/02.png){:height="50%" width="50%"}
+##### 用户列表
+<img src="./01.png" width="50%">
+
+##### 用户详情
+<img src="./02.png" width="50%">
