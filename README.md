@@ -8,5 +8,5 @@ go run main.go
 
 #### 演示效果
 
-![avatar](https://github.com/windawake/api-demo/blob/master/01.png)
-![avatar](https://github.com/windawake/api-demo/blob/master/02.png)
+![avatar](https://github.com/windawake/api-demo/blob/master/01.png){:height="50%" width="50%"}
+![avatar](https://github.com/windawake/api-demo/blob/master/02.png){:height="50%" width="50%"}
