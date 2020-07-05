@@ -7,11 +7,17 @@ import (
 
 func UserFilter(c *gin.Context) []func(*gorm.DB) *gorm.DB {
 	useFunc := make([]func(*gorm.DB) *gorm.DB, 0)
-	useFunc = append(useFunc, Active)
+
+	status := c.Query("status")
+	if status != "" {
+		useFunc = append(useFunc, Status(status))
+	}
 
 	return useFunc
 }
 
-func Active(db *gorm.DB) *gorm.DB {
-	return db.Where("status = ?", 1)
+func Status(value string) func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		return db.Where("status = ?", value)
+	}
 }
