@@ -11,6 +11,7 @@ type User struct {
 	Phone      string  `json:"phone"`
 	Status     int     `json:"status"`
 	StatusName string  `json:"status_name"`
+	CreatedAt  string  `json:"create_time"`
 	RoleId     int     `json:"role_id"`
 	Role       Role    `gorm:"ForeignKey:RoleId"`
 	Profile    Profile `gorm:"ForeignKey:UserId"`
