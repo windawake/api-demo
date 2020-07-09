@@ -5,40 +5,44 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-func WrapFilter(handler func(db *gorm.DB, req *gin.Context) *gorm.DB, c *gin.Context) func(db *gorm.DB) *gorm.DB {
-	return func(db *gorm.DB) *gorm.DB {
-		return handler(db, c)
+func AddFilter(useFunc *[]func(db *gorm.DB) *gorm.DB, handler func(req *gin.Context) func(db *gorm.DB) *gorm.DB, c *gin.Context) {
+	ret := handler(c)
+	if ret != nil {
+		*useFunc = append(*useFunc, ret)
 	}
+
 }
 
-type Request struct {
-	Status     string   `form:"status"`
-	CreateTime []string `form:"create_time"`
-}
+func UserFilter(c *gin.Context) []func(db *gorm.DB) *gorm.DB {
+	useFunc := make([]func(db *gorm.DB) *gorm.DB, 0)
 
-func UserFilter(c *gin.Context) []func(*gorm.DB) *gorm.DB {
-	useFunc := make([]func(*gorm.DB) *gorm.DB, 0)
-
-	status := c.Query("status")
-	if status != "" {
-		useFunc = append(useFunc, WrapFilter(Status, c))
-	}
-
-	createTime := c.QueryArray("create_time")
-	if len(createTime) == 2 && createTime[0] < createTime[1] {
-		useFunc = append(useFunc, WrapFilter(CreateTime, c))
-	}
+	AddFilter(&useFunc, Status, c)
+	AddFilter(&useFunc, CreateTime, c)
 
 	return useFunc
 }
 
 // 搜索条件 where status = ?
-func Status(db *gorm.DB, c *gin.Context) *gorm.DB {
+func Status(c *gin.Context) func(db *gorm.DB) *gorm.DB {
+	status := c.Query("status")
+	if status == "" {
+		return nil
+	}
 
-	return db.Where("status = ?", c.Query("status"))
+	return func(db *gorm.DB) *gorm.DB {
+		return db.Where("status = ?", c.Query("status"))
+	}
+	
 }
 
-func CreateTime(db *gorm.DB, c *gin.Context) *gorm.DB {
+// 搜索条件 created_at >= ? and created_at < ?
+func CreateTime(c *gin.Context) func(db *gorm.DB) *gorm.DB {
 	createTime := c.QueryArray("create_time")
-	return db.Where("created_at >= ? and created_at < ?", createTime[0], createTime[1])
+	if len(createTime) != 2 || createTime[0] >= createTime[1] {
+		return nil
+	}
+	
+	return func(db *gorm.DB) *gorm.DB {
+		return db.Where("created_at >= ? and created_at < ?", createTime[0], createTime[1])
+	}
 }

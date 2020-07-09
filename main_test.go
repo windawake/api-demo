@@ -82,3 +82,14 @@ func TestDemo01(t *testing.T) {
 	fmt.Println(got)
 
 }
+
+func modify(ages *[]int){
+	*ages = append(*ages, 1);
+}
+
+func TestSlice(t *testing.T) {
+	ages:=make([]int, 0)
+
+	modify(&ages)
+	fmt.Println(ages)
+}
